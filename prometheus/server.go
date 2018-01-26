@@ -1,15 +1,13 @@
 package prometheus
 
 import (
-	"fmt"
-	"github.com/Sirupsen/logrus"
-	"github.com/dropbox/godropbox/errors"
-	"github.com/gin-gonic/gin"
-	"github.com/pritunl/pritunl-monitor/errortypes"
-	"github.com/prometheus/client_golang/prometheus"
 	"net/http"
-	"os"
 	"time"
+
+	"log"
+
+	"github.com/gin-gonic/gin"
+	"github.com/prometheus/client_golang/prometheus"
 )
 
 func Limiter(c *gin.Context) {
@@ -19,9 +17,7 @@ func Limiter(c *gin.Context) {
 func Recovery(c *gin.Context) {
 	defer func() {
 		if r := recover(); r != nil {
-			logrus.WithFields(logrus.Fields{
-				"error": errors.New(fmt.Sprintf("%s", r)),
-			}).Error("prometheus: Handler panic")
+			log.Println(r)
 			c.Writer.WriteHeader(http.StatusInternalServerError)
 		}
 	}()
@@ -52,9 +48,7 @@ func Start() (err error) {
 			time.Sleep(10 * time.Second)
 			err := Update()
 			if err != nil {
-				logrus.WithFields(logrus.Fields{
-					"error": err,
-				}).Error("prometheus: Update error")
+				log.Println(err)
 			}
 		}
 	}()
@@ -64,7 +58,7 @@ func Start() (err error) {
 	Register(router)
 
 	server := &http.Server{
-		Addr:           ":" + os.Getenv("PROMETHEUS_PORT"),
+		Addr:           ":9099",
 		Handler:        router,
 		ReadTimeout:    10 * time.Second,
 		WriteTimeout:   10 * time.Second,
@@ -73,9 +67,7 @@ func Start() (err error) {
 
 	err = server.ListenAndServe()
 	if err != nil {
-		err = &errortypes.UnknownError{
-			errors.Wrap(err, "prometheus: Server error"),
-		}
+		log.Fatalln(err)
 		return
 	}
 
