@@ -1,8 +1,8 @@
 package database
 
 import (
-	"fmt"
-	"github.com/dropbox/godropbox/errors"
+	"log"
+
 	"gopkg.in/mgo.v2"
 )
 
@@ -21,9 +21,7 @@ func GetErrorCode(err error) (errCode int) {
 // Parse database error data and return error type
 func ParseError(err error) (newErr error) {
 	if err == mgo.ErrNotFound {
-		newErr = &NotFoundError{
-			errors.New("database: Not found"),
-		}
+		log.Println(err)
 		return
 	}
 
@@ -31,14 +29,9 @@ func ParseError(err error) (newErr error) {
 
 	switch errCode {
 	case 11000, 11001, 12582, 16460:
-		newErr = &DuplicateKeyError{
-			errors.New("database: Duplicate key"),
-		}
+		log.Println(err)
 	default:
-		newErr = &UnknownError{
-			errors.Wrap(err, fmt.Sprintf(
-				"database: Unknown error %d", errCode)),
-		}
+		log.Println(err)
 	}
 
 	return

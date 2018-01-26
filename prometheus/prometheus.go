@@ -1,10 +1,11 @@
 package prometheus
 
 import (
-	"github.com/pritunl/pritunl-monitor/database"
-	"github.com/pritunl/pritunl-monitor/hosts"
-	"github.com/prometheus/client_golang/prometheus"
 	"os"
+
+	"github.com/Labbs/pritunl-monitor/database"
+	"github.com/Labbs/pritunl-monitor/hosts"
+	"github.com/prometheus/client_golang/prometheus"
 )
 
 var (

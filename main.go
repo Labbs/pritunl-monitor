@@ -1,8 +1,6 @@
 package main
 
-import (
-	"github.com/pritunl/pritunl-monitor/prometheus"
-)
+import "github.com/Labbs/pritunl-monitor/prometheus"
 
 func main() {
 	err := prometheus.Start()
