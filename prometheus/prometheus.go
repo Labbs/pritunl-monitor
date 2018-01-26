@@ -1,8 +1,6 @@
 package prometheus
 
 import (
-	"os"
-
 	"github.com/Labbs/pritunl-monitor/database"
 	"github.com/Labbs/pritunl-monitor/hosts"
 	"github.com/prometheus/client_golang/prometheus"
@@ -43,7 +41,7 @@ func Update() (err error) {
 	db := database.GetDatabase()
 	defer db.Close()
 
-	host, err := hosts.GetHost(db, os.Getenv("HOST_ID"))
+	host, err := hosts.GetHost(db)
 	if err != nil {
 		return
 	}
